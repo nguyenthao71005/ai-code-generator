@@ -199,7 +199,7 @@ def index():
                 git_message = git_push_all()
                 result_message = f"Tạo file xong. {git_message}"
         else:
-            result_message = "Đã tạo file Python thành công."
+            result_message = "Đã file Python."
 
     return render_template(
         "index.html",

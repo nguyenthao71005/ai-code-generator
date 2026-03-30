@@ -1,9 +1,6 @@
-so = int(input("Nhập một số nguyên dương: "))
+so_nguyen = int(input("Nhập một số nguyên dương: "))
 
-if so > 0:
-    if (so % 2 == 0) or (so % 3 == 0):
-        print(f"Số {so} chia hết cho 2 hoặc cho 3 hoặc cả hai.")
-    else:
-        print(f"Số {so} không chia hết cho 2 và cũng không chia hết cho 3.")
+if so_nguyen % 2 == 0 or so_nguyen % 3 == 0:
+    print(f"Số {so_nguyen} chia hết cho 2 hoặc cho 3 hoặc cả hai.")
 else:
-    print("Bạn phải nhập một số nguyên dương.")
+    print(f"Số {so_nguyen} không chia hết cho 2 hoặc cho 3.")
