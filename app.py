@@ -13,7 +13,7 @@ app = Flask(__name__)
 MODEL_NAME = "gemini-2.5-flash"
 OUTPUT_DIR = "generated_codes"
 
-api_key = "AIzaSyAL1RRJAE6_XyEvg-9iqDG2IZR7lXpaatM"
+api_key ="AIzaSyAYLs6VdVH5dggJPY8vtMtxdsZJtYFj-9Y"
 client = genai.Client(api_key=api_key) if api_key else None
 
 
@@ -96,27 +96,48 @@ def ensure_git_repo():
     return result.returncode == 0 and result.stdout.strip() == "true"
 
 
-def git_has_changes():
-    result = subprocess.run(
-        ["git", "status", "--porcelain"],
-        capture_output=True,
-        text=True,
-        check=True
-    )
-    return bool(result.stdout.strip())
-
-
 def git_push_all():
-    subprocess.run(["git", "add", "."], check=True)
+    try:
+        add_result = subprocess.run(
+            ["git", "add", "."],
+            capture_output=True,
+            text=True
+        )
+        if add_result.returncode != 0:
+            return f"Lỗi git add: {add_result.stderr}"
 
-    if not git_has_changes():
-        return "Không có thay đổi mới để commit."
+        status_result = subprocess.run(
+            ["git", "status", "--porcelain"],
+            capture_output=True,
+            text=True
+        )
+        if status_result.returncode != 0:
+            return f"Lỗi git status: {status_result.stderr}"
 
-    commit_message = f"Auto generate python exercises - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-    subprocess.run(["git", "commit", "-m", commit_message], check=True)
-    subprocess.run(["git", "push"], check=True)
+        if not status_result.stdout.strip():
+            return "Không có thay đổi mới để commit."
 
-    return "Đã commit và push code lên GitHub thành công."
+        commit_message = f"Auto generate python exercises - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        commit_result = subprocess.run(
+            ["git", "commit", "-m", commit_message],
+            capture_output=True,
+            text=True
+        )
+        if commit_result.returncode != 0:
+            return f"Lỗi git commit: {commit_result.stderr}"
+
+        push_result = subprocess.run(
+            ["git", "push"],
+            capture_output=True,
+            text=True
+        )
+        if push_result.returncode != 0:
+            return f"Lỗi git push: {push_result.stderr}"
+
+        return "Đã commit và push code lên GitHub thành công."
+
+    except Exception as e:
+        return f"Lỗi khi chạy Git: {str(e)}"
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -169,17 +190,14 @@ def index():
                 })
 
         if action == "generate_and_push":
-            try:
-                if not ensure_git_repo():
-                    result_message = (
-                        "Đã tạo file xong, nhưng thư mục này chưa phải Git repo. "
-                        "Hãy chạy git init và kết nối remote GitHub trước."
-                    )
-                else:
-                    git_message = git_push_all()
-                    result_message = f"Tạo file xong. {git_message}"
-            except Exception as e:
-                result_message = f"Đã tạo file, nhưng push GitHub lỗi: {str(e)}"
+            if not ensure_git_repo():
+                result_message = (
+                    "Đã tạo file xong, nhưng thư mục này chưa phải Git repo. "
+                    "Hãy chạy git init và kết nối remote GitHub trước."
+                )
+            else:
+                git_message = git_push_all()
+                result_message = f"Tạo file xong. {git_message}"
         else:
             result_message = "Đã tạo file Python thành công."
 
@@ -192,4 +210,4 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
