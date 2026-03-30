@@ -2,22 +2,22 @@ from flask import Flask, render_template, request
 import os
 import re
 import subprocess
-import requests
 from datetime import datetime
+from dotenv import load_dotenv
+from google import genai
+
+load_dotenv()
 
 app = Flask(__name__)
 
-OLLAMA_URL = "http://localhost:11434/api/generate"
-MODEL_NAME = "qwen3:4b"
+MODEL_NAME = "gemini-2.5-flash"
 OUTPUT_DIR = "generated_codes"
+
+api_key = "AIzaSyCtZjJMxeS_UsuPoT9Qbnl3hJAFbpgKGxc"
+client = genai.Client(api_key=api_key) if api_key else None
 
 
 def split_exercises(text):
-    """
-    Tách các đề dạng:
-    Bài 4: ...
-    Bài 5: ...
-    """
     pattern = r"(Bài\s*(\d+)\s*:\s*.*?)(?=(?:\n\s*Bài\s*\d+\s*:)|\Z)"
     matches = re.findall(pattern, text, flags=re.IGNORECASE | re.DOTALL)
 
@@ -45,7 +45,10 @@ def clean_code_response(code):
     return code
 
 
-def generate_code_with_ollama(exercise_text):
+def generate_code_with_gemini(exercise_text):
+    if not client:
+        raise ValueError("Chưa tìm thấy GEMINI_API_KEY trong file .env")
+
     prompt = f"""
 Bạn là trợ lý lập trình Python.
 
@@ -64,19 +67,12 @@ Yêu cầu:
 {exercise_text}
 """
 
-    response = requests.post(
-        OLLAMA_URL,
-        json={
-            "model": MODEL_NAME,
-            "prompt": prompt,
-            "stream": False
-        },
-        timeout=180
+    response = client.models.generate_content(
+        model=MODEL_NAME,
+        contents=prompt
     )
-    response.raise_for_status()
 
-    data = response.json()
-    code = data.get("response", "")
+    code = response.text if response.text else ""
     return clean_code_response(code)
 
 
@@ -158,7 +154,7 @@ def index():
             content = ex["content"]
 
             try:
-                code = generate_code_with_ollama(content)
+                code = generate_code_with_gemini(content)
                 filepath = save_code_file(number, code)
                 generated_files.append({
                     "number": number,

@@ -79,14 +79,13 @@
         <h1>Form nhập đề bài và tạo file Python</h1>
 
         <form method="POST">
-            <textarea name="exercise_text" placeholder="Nhập ví dụ:
+    <textarea name="exercise_text" placeholder="Nhập ví dụ:
 
-Bài 4: Viết chương trình nhập một số nguyên dương và kiểm tra xem số đó có chia hết cho 2 hoặc cho 3 hoặc cả hai hay không?
-
-Bài 5: Viết chương trình giải phương trình bậc 2: a*x*x + b*x + c = 0. Trong đó 3 tham số a,b,c được nhập từ bàn phím.">{{ input_text }}</textarea>
-            <br>
-            <button type="submit">Tạo file Python</button>
-        </form>
+Bài 4: Viết chương trình nhập một số nguyên dương và kiểm tra xem số đó có chia hết cho 2 hoặc cho 3 hoặc cả hai hay không?">{{ input_text }}</textarea>
+    <br>
+    <button type="submit" name="action" value="generate">Tạo Python</button>
+    <button type="submit" name="action" value="generate_and_push" class="secondary">Tạo file + đẩy GitHub</button>
+</form>
 
         {% if result_message %}
             <div class="message">{{ result_message }}</div>
