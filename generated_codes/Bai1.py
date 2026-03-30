@@ -1,5 +1,3 @@
-n = int(input("Nhập một số nguyên n: "))
-product = 1
-for i in range(1, n + 1):
-    product *= i
-print("Tích từ 1 đến", n, "là:", product)
+n = int(input("Nhập số nguyên n: "))
+tong = n * (n + 1) // 2
+print("Tổng từ 1 đến", n, "là:", tong)
