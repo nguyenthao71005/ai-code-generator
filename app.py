@@ -13,7 +13,7 @@ app = Flask(__name__)
 MODEL_NAME = "gemini-2.5-flash"
 OUTPUT_DIR = "generated_codes"
 
-api_key = "AIzaSyCtZjJMxeS_UsuPoT9Qbnl3hJAFbpgKGxc"
+api_key = "AIzaSyAL1RRJAE6_XyEvg-9iqDG2IZR7lXpaatM"
 client = genai.Client(api_key=api_key) if api_key else None
 
 
