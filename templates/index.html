@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Form tạo bài Python</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #f3f4f6;
+        }
+
+        .container {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 220px;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 12px;
+            padding: 10px 18px;
+            font-size: 15px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .message {
+            margin-top: 18px;
+            padding: 12px;
+            background: #eef2ff;
+            border-left: 4px solid #4f46e5;
+            border-radius: 6px;
+        }
+
+        .file-card {
+            margin-top: 20px;
+            padding: 16px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+        }
+
+        pre {
+            background: #111827;
+            color: #f9fafb;
+            padding: 14px;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Form nhập đề bài và tạo file Python</h1>
+
+        <form method="POST">
+            <textarea name="exercise_text" placeholder="Nhập ví dụ:
+
+Bài 4: Viết chương trình nhập một số nguyên dương và kiểm tra xem số đó có chia hết cho 2 hoặc cho 3 hoặc cả hai hay không?
+
+Bài 5: Viết chương trình giải phương trình bậc 2: a*x*x + b*x + c = 0. Trong đó 3 tham số a,b,c được nhập từ bàn phím.">{{ input_text }}</textarea>
+            <br>
+            <button type="submit">Tạo file Python</button>
+        </form>
+
+        {% if result_message %}
+            <div class="message">{{ result_message }}</div>
+        {% endif %}
+
+        {% for item in generated_files %}
+            <div class="file-card">
+                <h3>Bài {{ item.number }} → {{ item.filepath }}</h3>
+                <pre>{{ item.code }}</pre>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
