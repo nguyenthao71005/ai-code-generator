@@ -13,7 +13,7 @@ app = Flask(__name__)
 MODEL_NAME = "gemini-2.5-flash"
 OUTPUT_DIR = "generated_codes"
 
-api_key ="AIzaSyAYLs6VdVH5dggJPY8vtMtxdsZJtYFj-9Y"
+api_key ="AIzaSyAcjBraYxaceYL0cg1lLkgQLt_YAM5TSEM"
 client = genai.Client(api_key=api_key) if api_key else None
 
 
@@ -57,11 +57,7 @@ Hãy đọc đề bài sau và viết đúng 1 chương trình Python hoàn ch�
 Yêu cầu:
 - Code chạy được
 - Đơn giản, dễ hiểu
-- Dùng input() và print() nếu phù hợp
-- Nếu đề yêu cầu thư viện math thì hãy import đúng
-- Không giải thích
-- Không thêm markdown
-- Chỉ trả về code Python thuần
+- Chỉ trả về code Python
 
 Đề bài:
 {exercise_text}
@@ -199,7 +195,7 @@ def index():
                 git_message = git_push_all()
                 result_message = f"Tạo file xong. {git_message}"
         else:
-            result_message = "Đã file Python."
+            result_message = "Đã tạo Python."
 
     return render_template(
         "index.html",
